@@ -1,6 +1,5 @@
-package com.bounter.encrypt.symmetric;
+package com.bounter.mybatis.util;
 
-import com.bounter.encrypt.encode.EncodeUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -16,6 +15,9 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class SymmetricCryptoUtil {
 
+	//AES默认的十六进制密钥串
+	private static final String DEFAULT_KEY_AES = "692d6c6f76652d2d7869616f73757375";
+	
     /**
      * 生成56位的DES密钥，以十六进制形式返回
      * @return
@@ -139,6 +141,16 @@ public class SymmetricCryptoUtil {
         cipher.init(Cipher.ENCRYPT_MODE,secretKey);
         return cipher.doFinal(data);
     }
+    
+    /**
+     * 用默认的AES密钥串加密
+     * @param data
+     * @return
+     * @throws Exception
+     */
+    public static byte[] encryptAESWithDefaultKey(byte[] data) throws Exception {
+        return encryptAES(DEFAULT_KEY_AES, data);
+    }
 
     /**
      * AES解密
@@ -156,12 +168,20 @@ public class SymmetricCryptoUtil {
         return cipher.doFinal(data);
     }
 
+    /**
+     * 用默认的密钥串解密
+     * @param data
+     * @return
+     * @throws Exception
+     */
+    public static byte[] decryptAESWithDefaultKey(byte[] data) throws Exception {
+        return decryptAES(DEFAULT_KEY_AES, data);
+    }
 
     public static void main(String[] args) throws Exception {
         String dataStr = "赵胜";
-        String hexKey = genAESHexKey();
-        byte[] encryptData = encryptAES(hexKey,dataStr.getBytes());
-        byte[] decryptData = decryptAES(hexKey,encryptData);
+        byte[] encryptData = encryptAES(DEFAULT_KEY_AES,dataStr.getBytes());
+        byte[] decryptData = decryptAES(DEFAULT_KEY_AES,encryptData);
         System.out.println(new String(decryptData));
     }
 }
